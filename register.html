@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Custom Navigation Bar */
+        .navbar-custom {
+            background: linear-gradient(90deg, #007bff, #08079a);
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: white;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #eaeaea;
+        }
+
+        .nav-link {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        /* Background Image */
+        body {
+            background: url('{{ url_for('static', filename='images/Campus-ADMIN-AERIAL.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Centered Login Form */
+        .login-container {
+            max-width: 390px;
+            height: 550px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Overlapping Logo */
+        .logo-container {
+            position: absolute;
+            top: 0px; /* Adjust this value to move the logo up or down */
+            left: 25px; /* Adjust this value to move the logo left or right */
+            z-index: 1000; /* Ensures the logo is on top of the navbar */
+        }
+
+        .logo-container img {
+            height: 80px; /* Adjust the size of the logo */
+        }
+        /* Image inside the container */
+        .login-container img {
+            display: block;
+            margin: 0 auto 30px; /* Center the image and add margin below it */
+            width: 200px; /* Adjust the size of the image */
+            height: 120px;
+        }
+        /* Modern Input Fields with Bottom Line Only */
+        .form-control {
+            border: none;
+            border-bottom: 2px solid #373131;
+            border-radius: 0;
+            box-shadow: none;
+            width:340px;
+        }
+
+        .form-control:focus {
+            border-bottom: 2px solid #007bff;
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* Positioning the Eye Icon inside the Password Field */
+        .input-group .form-control {
+            position: relative;
+        }
+
+        .input-group-text {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Adjustments for the eye icon */
+        .input-group-text i {
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 50px; /* Adjust this value to control spacing */
+        }
+        .custom-btn-width {
+            width: 50%; /* Adjust this value as needed */
+            border-radius:15px;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            .login-container {
+                max-width: 60px; /* Reduce the max-width to fit smaller screens */
+                padding: 15px; /* Adjust padding */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 80%; /* Further reduce the max-width for very small screens */
+                padding: 10px; /* Adjust padding */
+                max-height: 500px flex; /* Adjust height for smaller screens */
+            }
+            .form-control {
+                width: 100%; /* Adjust input field width */
+            }
+            .nav-link {
+                font-size: 8px; /* Slightly reduce font size on smaller screens */
+                
+            }
+            .nav-item {
+                padding-right: 140px !important; /* Reduce padding on smaller screens */
+            }
+
+            .navbar-custom {
+                padding: 35px 10px; /* Adjust padding for mobile */
+                max-width: 100%; /* Make it full width */
+                max-height: 10px; /* Adjust height for mobile */
+            }
+
+            /* Adjust navbar height for smaller screens */
+            .navbar-custom .navbar-brand {
+                font-size: 18px; /* Adjust brand font size */
+            }
+            .form-control {
+                max-width: 250px; /* Adjust input field width for mobile */
+            }
+            .logo-container img {
+                max-width: 80px;
+                max-height: 80px;
+                
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.unizulu.ac.za" target="_blank">Unizulu Official</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://reg.unizulu.ac.za/wp-content/uploads/2022/01/FED-culty-Handbook.pdf" target="_blank">Handbook</a>
+                    </li>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Overlapping Logo -->
+<div class="logo-container">
+    <a href="#">
+        <img src="{{ url_for('static', filename='images/uni_logo.png') }}" alt="Logo">
+    </a>
+</div>
+
+<!-- Login Form Container -->
+<div class="login-container">
+    <img src="{{ url_for('static', filename='images/download_logo.png') }}" alt="Login Icon">
+    <form method="POST" action="{{ url_for('main.register') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.email(class="form-control", placeholder="Enter email", id="email") }}
+            <small id="usernameFeedback" class="form-text text-danger"></small> <!-- Feedback area -->
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                {{ form.password(class="form-control", placeholder="Enter password", type="password", id="password") }}
+                <div class="input-group-append">
+                    <span class="input-group-text" onclick="togglePasswordVisibility('password', 'togglePasswordIcon')">
+                        <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                {{ form.confirm_password(class="form-control", placeholder="Confirm password", type="password", id="confirm_password") }}
+                <div class="input-group-append">
+                    <span class="input-group-text" onclick="togglePasswordVisibility('confirm_password', 'toggleConfirmPasswordIcon')">
+                        <i class="fas fa-eye" id="toggleConfirmPasswordIcon"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-{{ messages[0][0] }} mt-2">
+            {{ messages[0][1] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-primary custom-btn-width") }}
+        </div>
+    </form>
+</div>
+
+<script>
+    // JavaScript to handle real-time username availability check
+    document.getElementById('email').addEventListener('blur', function() {
+        const email = this.value;
+        const feedback = document.getElementById('usernameFeedback');
+
+        if (email) {
+            fetch('{{ url_for("main.check_username") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}' // Include CSRF token
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    feedback.textContent = 'Email already exists. Please choose another.';
+                } else {
+                    feedback.textContent = ''; // Clear feedback if username is available
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            feedback.textContent = ''; // Clear feedback if input is empty
+        }
+    });
+
+    function togglePasswordVisibility(fieldId, iconId) {
+        const passwordField = document.getElementById(fieldId);
+        const toggleIcon = document.getElementById(iconId);
+        
+        // Toggle the type of the password field
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text'; // Show password
+            toggleIcon.classList.replace('fa-eye-slash','fa-eye'); // Change icon to 'eye-slash' to indicate hiding
+        } else {
+            passwordField.type = 'password'; // Hide password
+            toggleIcon.classList.replace('fa-eye','fa-eye-slash'); // Change icon to 'eye' to indicate showing
+        }
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

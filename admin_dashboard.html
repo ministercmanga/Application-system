@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i> Admin
+        </a>
+        <div class="dropdown-menu" aria-labelledby="profileDropdown">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+        
+        <form class="search-bar-form">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search applications...">
+                <button type="submit" class="search-button">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+            <!-- Mode Switch Icon -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="modeSwitch" data-toggle="tooltip" data-placement="bottom" title="Switch to Night Mode">
+                    <i class="fas fa-moon fa-lg"></i>
+                </a>
+            </li>
+            <!-- Notification Icon -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-lg"></i>
+                    <span class="badge badge-danger" id="notification-count">3</span> <!-- Example badge for notifications count -->
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                    <a class="dropdown-item" href="#">New application submitted</a>
+                    <a class="dropdown-item" href="#">Application #123 approved</a>
+                    <a class="dropdown-item" href="#">User X sent a message</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center" href="#">View all notifications</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Sidebar menu-->
+    <div class="wrapper">
+        <input type="checkbox" id="btn" hidden>
+        <label for="btn" class="menu-btn">
+          <i class="fas fa-bars"></i>
+          <i class="fas fa-times"></i>
+        </label>
+        <nav id="sidebar">
+          <div class="title">Admin Menu</div>
+          <ul class="list-items">
+            <li><a href="{{ url_for('main.manage_course_capacity') }}"><i class="fas fa-hotel"></i>Manage Course</a></li>
+            <li><a href="{{ url_for('main.add_faculty') }}"><i class="fas fa-address-book"></i>Add Fuculty</a></li>
+            <li><a href="{{ url_for('main.add_course') }}"><i class="fas fa-book"></i>Add Course</a></li>
+            <li><a href="{{ url_for('main.add_subject') }}"><i class="fas fa-stream"></i>Add Subject</a></li>
+            <li><a href="{{ url_for('main.analytics') }}"><i class="fas fa-chart-line"></i>Analytics</a></li>
+            <div class="icons">
+              <a href="https://web.facebook.com/UNIZULU?__cft__[0]=AZXD4dFNHQOACNOolP3UcH5DGYONYv77GhvPbOfiPXFJg5yXsCe9gv7xuhEi0F3BZoWtDM0Xa4pyLofHrHj42mAXtC6yd6SZnYc1uiIf0uvKcfiwflTA33h3Y_5LJeZj90rl01ghffhE3sf04-5TtLnYa7ahdjrwFWVLGXiXcMs6MuOq-yx6-MxiuHqYRPlzzkV0VSEVXjQuE_WIRO9qG_eo&__tn__=-]C%2CP-R"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://x.com/UNIZULUongoye"><i class="fab fa-twitter"></i></a>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+    <div class="container-fluid mt-4">
+        <div class="overview-panel d-flex justify-content-center">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-total-app mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Applications</h5>
+                            <p class="card-text">{{ total_applications }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-pending-app mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Uncommunicated Applications</h5>
+                            <p class="card-text">{{ uncommunicated_applications }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-approved-app mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Approved Applications</h5>
+                            <p class="card-text">{{ approved_applications }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-declined-app mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Declined Applications</h5>
+                            <p class="card-text">{{ declined_applications }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--filter application-->
+    <div class="d-flex justify-content-center mb-3">
+        <form method="GET" action="{{ url_for('main.admin_dashboard') }}" class="form-inline">
+            <label for="communicationFilter" class="mr-2">Filter by <br>Communication:</label>
+            <select id="communicationFilter" name="communication" class="form-control mr-3">
+                <option value="">All</option>
+                <option value="Yes" {% if request.args.get('communication') == 'Yes' %}selected{% endif %}>Communicated</option>
+                <option value="No" {% if request.args.get('communication') == 'No' %}selected{% endif %}>Not Communicated</option>
+            </select>
+        
+            <label for="courseFilter" class="mr-2">Filter by Course:</label>
+            <select id="courseFilter" name="course" class="form-control mr-3">
+                <option value="">All</option>
+                {% for course in courses %}
+                <option value="{{ course.id }}" {% if request.args.get('course') == course.id|string %}selected{% endif %}>{{ course.name }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="dateFilter" class="mr-2">Filter by Date:</label>
+            <input type="date" id="dateFilter" name="submission_date" class="form-control mr-3" value="{{ request.args.get('submission_date') }}">
+        
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </form>
+    </div>
+
+    <!-- Table Container -->
+    <div class="container">
+        <div class="table-responsive table-wrapper mx-auto" style="max-width: 1100px; height: 400px;">
+            <table class="table table-hover">
+                <thead class="thead-fixed">
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Course</th>
+                        <th>
+                            <a href="{{ url_for('main.admin_dashboard', sort_by='total_points', order='asc', communication=request.args.get('communication'), course=request.args.get('course'), submission_date=request.args.get('submission_date')) }}">
+                                Total Points &#9650; <!-- Upward arrow for ascending -->
+                            </a>
+                            |
+                            <a href="{{ url_for('main.admin_dashboard', sort_by='total_points', order='desc', communication=request.args.get('communication'), course=request.args.get('course'), submission_date=request.args.get('submission_date')) }}">
+                                Total Points &#9660; <!-- Downward arrow for descending -->
+                            </a>
+                        <th>Status</th>
+                        <th>Communication Status</th>
+                        <th>Submission Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if applications %}
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.id }}</td>
+                        <td>{{ application.course.name }}</td>
+                        <td>{{ application.total_points }}</td>
+                        <td>{{ application.status }}</td>
+                        <td>{{ "Yes" if application.communicated else "No" }}
+                        <td>{{ application.submission_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#applicationModal{{ application.id }}">View Details</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                   <tr>
+                        <td colspan="6" class="text-center">No applications found for the selected filters.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+<!-- Application Details Modal -->
+{% for application in applications %}
+<div class="modal fade" id="applicationModal{{ application.id }}" tabindex="-1" role="dialog" aria-labelledby="applicationModalLabel{{ application.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applicationModalLabel{{ application.id }}">Application #{{ application.id }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>Personal Information</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>First Name</th>
+                        <td>{{ application.user.personal_info.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Name</th>
+                        <td>{{ application.user.personal_info.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>ID Number</th>
+                        <td>{{ application.user.personal_info.id_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Home Address</th>
+                        <td>{{ application.user.personal_info.home_address }}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone Number</th>
+                        <td>{{ application.user.personal_info.phone }}</td>
+                    </tr>
+                    
+                </table>
+
+                <h5>Predicted Marks</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Predicted Mark</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mark in application.predicted_marks %}
+                        <tr>
+                            <td>{{ mark.subject_name }}</td>
+                            <td {% if mark.subject_name in (application.unmet_requirements or []) %} style="color: red;" {% endif %}>
+                                {{ mark.predicted_mark }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h6>Total Points:
+                    <span {% if 'Total Points' in (application.unmet_requirements or [])  %} style="color: red;" {% endif %}>
+                         {{ application.total_points }}
+                    </span>
+                </h6>
+
+                <h5>Uploaded Files</h5>
+                <ul>
+                    {% for file in application.file_entries %}
+                    <li><a href="{{ url_for('main.uploaded_file', filename=file.filename) }}" target="_blank">{{ file.filename }}</a></li>
+                    {% endfor %}
+                </ul>
+
+                <h5>Admin Status Communication</h5>
+                <form method="POST" action="{{ url_for('main.update_status', application_id=application.id) }}">
+                    {{ form.hidden_tag() }}
+                    <textarea class="form-control" name="status_communication" rows="3">{{ application.status_communication }}</textarea>
+                    <select class="form-control mt-2" name="status">
+                        <option value="Approved" {% if application.status == 'Approved' %}selected{% endif %}>Approved</option>
+                        <option value="Declined" {% if application.status == 'Declined' %}selected{% endif %}>Declined</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary mt-3">Update Status</button>
+                </form>
+            </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }} mt-1">
+                {{ messages[0][1] }}
+                </div>
+            {% endif %}
+            {% endwith %}
+            <div class="modal-footer">  
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

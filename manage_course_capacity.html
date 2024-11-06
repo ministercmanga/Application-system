@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Profile Management on the Left -->
+        <a class="navbar-brand" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i> Admin
+        </a>
+        <div class="dropdown-menu" aria-labelledby="profileDropdown">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+        
+        <!-- Centered Search Bar -->
+        <form class="search-bar-form">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search applications...">
+                <button type="submit" class="search-button">
+                    <i class="fa fa-search"></i> <!-- FontAwesome icon -->
+                </button>
+            </div>
+        </form>
+
+        <!-- Icons on the Right -->
+        <ul class="navbar-nav ml-auto">
+            <!-- Mode Switch Icon -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="modeSwitch" data-toggle="tooltip" data-placement="bottom" title="Switch to Night Mode">
+                    <i class="fas fa-moon fa-lg"></i> <!-- Increased size with `fa-lg` -->
+                </a>
+            </li>
+            <!-- Notification Icon -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-lg"></i> <!-- Increased size with `fa-lg` -->
+                    <span class="badge badge-danger" id="notification-count">3</span> <!-- Example badge for notifications count -->
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                    <a class="dropdown-item" href="#">New application submitted</a>
+                    <a class="dropdown-item" href="#">Application #123 approved</a>
+                    <a class="dropdown-item" href="#">User X sent a message</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center" href="#">View all notifications</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Manage Course Capacity</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Max Applicants</th>
+                        <th>Accepted Applications</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.name }}</td>
+                        <td>
+                            <input type="number" name="max_applicants_{{ course.id }}" class="form-control" value="{{ course.max_applicants }}" min="0">
+                        </td>
+                        <td>{{ progress_data[course.id].accepted }}</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar
+                                    {% if progress_data[course.id].percentage_filled < 50 %}
+                                        bg-success
+                                    {% elif progress_data[course.id].percentage_filled < 80 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-danger
+                                    {% endif %}
+                                " role="progressbar"
+                                    style="width: {{ progress_data[course.id].percentage_filled }}%;" 
+                                    aria-valuenow="{{ progress_data[course.id].percentage_filled }}" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100">
+                                    {{ progress_data[course.id].percentage_filled | round(1) }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }} mt-2">
+                {{ messages[0][1] }}
+                </div>
+            {% endif %}
+            {% endwith %}
+            <button type="submit" class="btn btn-primary">Update Capacities</button>
+        </form>
+        <a href="{{ url_for('main.admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+.form-check-inline {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+#report-cards-container {
+    margin-top: 20px;
+}
+
+.form-group.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-right: 10px;
+    margin-bottom: 0; /* Remove default margin on labels */
+}
+
+/* Custom Navigation Bar */
+.navbar-custom {
+    background: linear-gradient(90deg, #007bff, #0056b3); /* Linear gradient */
+}
+
+.navbar-brand {
+    font-size: 31px, flex;
+    font-family: fantasy;
+    padding-left: 30px;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+    color: white;
+}
+
+/* Style the dropdown menu */
+.navbar-custom .dropdown-menu {
+    background-color: #f3f3f3;
+    border: none;
+    border-radius: 0;
+}
+
+.navbar-custom .dropdown-item {
+    color: black;
+}
+
+/* Customize the hamburger menu icon */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.custom-file-upload .input-group {
+    display: flex;
+    align-items: center;
+}
+
+.file-name-display {
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 8px;
+    border-radius: 4px 0 0 4px;
+}
+
+.btn-upload {
+    background-color: #808080; /* Use your preferred color here */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+    .btn-upload:hover {
+        background-color: #007bff; /* Darken color on hover */
+    }
+
+.file-input {
+    display: none;
+}
